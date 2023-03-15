@@ -8,3 +8,4 @@ if __name__ == '__main__':
     print(task2('ai.txt', 'XZ'))
     print(task2('cabs.txt', 'ABZD'))
     
+    # this is a comment from the thingo
