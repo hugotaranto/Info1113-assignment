@@ -1,6 +1,6 @@
 def task2(filename, letters):
     #TODO
-    return ''
+    return 'test'
 
 # second branch
 
