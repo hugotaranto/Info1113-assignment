@@ -2,7 +2,7 @@ def task2(filename, letters):
     #TODO
     return ''
 
-# testing branch 2
+# second branch
 
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task2 function
