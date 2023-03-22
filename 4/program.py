@@ -89,11 +89,6 @@ def xfs(type, message, dictionary, threshold, letters):
 
     # adding the root node onto the queue
 
-    if type == "d":
-        to_pop = - 1
-    else:
-        to_pop = 1
-
     queue = [message, 0, ""]
 
     expanded = 0
@@ -110,10 +105,18 @@ def xfs(type, message, dictionary, threshold, letters):
             max_fringe = len(queue)/3
 
         try:
-            current_key = queue.pop(to_pop)
-            current_depth = queue.pop(to_pop)
-            current_message = queue.pop(to_pop)
-            
+
+            if type == 'd':
+
+                current_key = queue.pop(-1)
+                current_depth = queue.pop(-1)
+                current_message = queue.pop(-1)
+
+            else:
+                current_message = queue.pop(0)
+                current_depth = queue.pop(0)
+                current_key = queue.pop(0)
+                
             expanded += 1
         except:
             break
@@ -152,115 +155,6 @@ def xfs(type, message, dictionary, threshold, letters):
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
 
 
-def dfs(message, dictionary, threshold, letters):
-
-    # adding the root node onto the queue
-
-    queue = [message, 0, ""]
-
-    expanded = 0
-    max_fringe = 1
-    max_depth = 0
-
-    expanded_states = []
-
-    # start looping taking the first element off of the queue
-
-    while(expanded < 1000):
-
-        if len(queue)/3 > max_fringe:
-            max_fringe = len(queue)/3
-
-        try:
-            current_key = queue.pop(-1)
-            current_depth = queue.pop(-1)
-            current_message = queue.pop(-1)
-            
-            expanded += 1
-        except:
-            break
-
-        if len(expanded_states) != 10:
-            expanded_states.append(current_message)
-
-        if current_depth > max_depth:
-            max_depth = current_depth
-
-        # now check if the searched node is a match
-
-        if check_threshold(current_message, dictionary, threshold):
-            return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
-
-
-        # otherwise expand and add children to end of queue
-
-        children = search_node(current_message, letters)
-
-        for i in range(-2, len(children) * -1 -1, -2):
-            queue.append(children[i])
-            queue.append(current_depth + 1)
-            queue.append(current_key + children[i + 1])
-
-        if len(queue)/3 > max_fringe:
-            max_fringe = len(queue)/3
-
-    return 0, None, None, expanded, max_fringe, max_depth, expanded_states
-
-
-
-def bfs(message, dictionary, threshold, letters):
-
-    # adding the root node onto the queue
-
-    queue = [message, 0, ""]
-
-    expanded = 0
-    max_fringe = 1
-    max_depth = 0
-
-    expanded_states = []
-
-    # start looping taking the first element off of the queue
-
-    while(expanded < 1000):
-
-        if len(queue)/3 > max_fringe:
-            max_fringe = len(queue)/3
-
-        try:
-            current_message = queue.pop(0)
-            current_depth = queue.pop(0)
-            current_key = queue.pop(0)
-
-            expanded += 1
-        except:
-            break
-
-        if len(expanded_states) != 10:
-            expanded_states.append(current_message)
-
-        if current_depth > max_depth:
-            max_depth = current_depth
-
-        # now check if the searched node is a match
-
-        if check_threshold(current_message, dictionary, threshold):
-            return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
-
-
-        # otherwise expand and add children to end of queue
-
-        children = search_node(current_message, letters)
-
-        for i in range(0, len(children), 2):
-            queue.append(children[i])
-            queue.append(current_depth + 1)
-            queue.append(current_key + children[i + 1])
-
-        if len(queue)/3 > max_fringe:
-            max_fringe = len(queue)/3
-
-    return 0, None, None, expanded, max_fringe, max_depth, expanded_states
 
 
 
@@ -296,9 +190,9 @@ def task4(algorithm, message_filename, dictionary_filename, threshold, letters, 
 
 
     if algorithm == 'd':
-        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = dfs(message, dictionary, threshold, letters)
+        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = xfs('d', message, dictionary, threshold, letters)
     elif algorithm == 'b':
-        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = bfs(message, dictionary, threshold, letters)
+        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = xfs('b', message, dictionary, threshold, letters)
     elif algorithm == 'i':
         status = ids()
     elif algorithm == 'u':
