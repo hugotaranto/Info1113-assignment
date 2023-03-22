@@ -1,6 +1,12 @@
 
-def swap(key, filename):
+def task1(key, filename, indicator):
 
+    if indicator != 'd' and indicator != 'e':
+        return ''
+
+    if indicator == 'd':
+        key = key[::-1]
+        
     try:
         f = open(filename, 'r')
     except:
@@ -36,19 +42,6 @@ def swap(key, filename):
 
 
     return "".join(message)
-
-
-
-
-def task1(key, filename, indicator):
-
-    if indicator != 'd' and indicator != 'e':
-        return ''
-
-    if indicator == 'd':
-        key = key[::-1]
-        
-    return swap(key, filename)
 
 
 if __name__ == '__main__':
