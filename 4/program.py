@@ -158,8 +158,83 @@ def xfs(type, message, dictionary, threshold, letters):
 
 
 
-def ids():
-    pass
+def ids(message, dictionary, threshold, letters):
+
+    # start with a depth limit of 1
+    # explore that node and add children to frontier
+    # increment depth limit and continue
+
+    # each time the depth limit is incremented, restart from the root node
+
+    # traverse in dfs style
+
+    queue = [message, 0, ""]
+
+    depth_limit = 1
+
+
+    expanded = 0
+    max_fringe = 1
+    max_depth = 0
+
+    expanded_states = []
+
+    # start looping taking the first element off of the queue
+
+    while(expanded < 1000):
+
+        if len(queue)/3 > max_fringe:
+            max_fringe = len(queue)/3
+
+        try:
+            current_key = queue.pop(-1)
+            current_depth = queue.pop(-1)
+            current_message = queue.pop(-1)
+                
+            expanded += 1
+        except:
+            depth_limit += 1
+            queue = [message, 0, ""]
+            continue
+
+        if len(expanded_states) != 10:
+            expanded_states.append(current_message)
+
+        if current_depth > max_depth:
+            max_depth = current_depth
+
+        # now check if the searched node is a match
+
+        if check_threshold(current_message, dictionary, threshold):
+            return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
+
+
+        # otherwise expand and add children to end of queue if they are not out of the depth limit
+
+        if not depth_limit == current_depth + 1:
+
+
+            children = search_node(current_message, letters)
+
+
+            for i in range(-2, len(children) * -1 -1, -2):
+                queue.append(children[i])
+                queue.append(current_depth + 1)
+                queue.append(current_key + children[i + 1])
+
+            if len(queue)/3 > max_fringe:
+                max_fringe = len(queue)/3
+
+            if len(queue) == 0:
+                break
+
+        else: 
+            continue
+
+    return 0, None, None, expanded, max_fringe, max_depth, expanded_states
+
+
+
 
 
 def ucs():
@@ -182,7 +257,6 @@ def task4(algorithm, message_filename, dictionary_filename, threshold, letters, 
 
 
     # stop the search if 1000 nodes have been searched
-    # ret is set to 0 if the solution was not found
 
     status = -1
 
@@ -191,12 +265,12 @@ def task4(algorithm, message_filename, dictionary_filename, threshold, letters, 
 
     if algorithm == 'd':
         status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = xfs('d', message, dictionary, threshold, letters)
-    elif algorithm == 'b':
+    elif algorithm == 'b' or algorithm == 'u':
         status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = xfs('b', message, dictionary, threshold, letters)
     elif algorithm == 'i':
-        status = ids()
-    elif algorithm == 'u':
-        status = ucs()
+        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = ids(message, dictionary, threshold, letters)
+    # elif algorithm == 'u':
+    #     status = ucs()
 
 
     if status == 0:
