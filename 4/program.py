@@ -228,17 +228,7 @@ def ids(message, dictionary, threshold, letters):
             if len(queue) == 0:
                 break
 
-        else: 
-            continue
-
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
-
-
-
-
-
-def ucs():
-    pass
 
 
 
