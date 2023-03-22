@@ -64,7 +64,7 @@ def search_node(message, letters):
             ret.append(swap("" + letters_list[i] + letters_list[j], message))
             ret.append("" + letters_list[i] + letters_list[j])
 
-    return ret
+    return ret # a list containing the list of strings and next to it the two letters used, i.e. ["Bcas are taxis.", "AB"] where "Bcas are taxis." would be the result after transforming A<->B
 
 
 
@@ -202,18 +202,24 @@ def task4(algorithm, message_filename, dictionary_filename, threshold, letters, 
     if status == 0:
         ret = "No solution found.\n\nNum nodes expanded: {}\nMax fringe size: {:.0f}\nMax depth: {}".format(num_expanded, max_fringe, max_depth)
 
-    if status == 1:
+    elif status == 1:
         ret = "Solution: {}\n\nKey: {}\nPath Cost: {:.0f}\n\nNum nodes expanded: {}\nMax fringe size: {:.0f}\nMax depth: {}".format(
             solution, key_found, len(key_found)/2, num_expanded, max_fringe, max_depth)
+
+    else:
+        return "Incorrect inputs given"
 
 
     if debug == 'y':
         return ret + "\n\nFirst few expanded states:\n" + "\n\n".join(expanded_states)
 
+    else:
+        return ret
+
 
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task4 function
-    print(task4('d', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'y'))
+    # print(task4('d', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'y'))
     # print(task4('b', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'y'))
-    # print(task4('i', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'y'))
+    print(task4('i', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'y'))
     
