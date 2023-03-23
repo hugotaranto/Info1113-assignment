@@ -295,14 +295,9 @@ def my_print(queue):
 
 
 
-
 def greedy(message, dictionary, threshold, letters):
 
-    queue = [message, 0, "", get_heuristic(message, False)]
-
-    # current_message = message
-    # current_depth = 0
-    # current_key = ""
+    queue = [[message, 0, "", get_heuristic(message, False)]] # queue contains arrays of form: [message, depth, key, heuristic]
 
     expanded = 1
     max_fringe = 1
@@ -314,100 +309,69 @@ def greedy(message, dictionary, threshold, letters):
 
     while(True):
 
-        
-        # print(get_heuristic(current_message, False))
-        # print(current_key)
-
-        if len(queue) / 4 > max_fringe:
-            max_fringe = len(queue) / 4
+        if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
+            max_fringe = len(queue)
 
 
-        my_print(queue)
-
+        # now we pop off the first node in queue and expand it
 
         try:
+            node = queue.pop(0)
 
-            current_message = queue.pop(0)
-            current_depth = queue.pop(0)
-            current_key = queue.pop(0)
-            current_heuristic = queue.pop(0)
+            current_message = node[0]
+            current_depth = node[1]
+            current_key = node[2]
+            current_heuristic = node[3]
             
         except:
             break
+        
 
+        # increment expanded value
         expanded += 1
 
+        # updating max_depth value
         if current_depth > max_depth:
             max_depth = current_depth
 
+        # checking if the expanded node is a solution
 
         if check_threshold(current_message, dictionary, threshold):
             return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
         
 
-        # now we search the node
+        # now we search the node and put children node into a list
 
         children = search_node(current_message, letters)
 
 
-        # min = get_heuristic(children[0], False)
-        # index = 0
-
-        # for i in range(2, len(children), 2):
-
-        #     heuristic = get_heuristic(children[i], False)
-
-        #     if min < heuristic:
-        #         min = heuristic
-        #         index = i
-
-        # then order all of the nodes into the queue
+        # now we loop through children and add them to the queue in order of heuristic value
 
         for i in range(0, len(children), 2):
             
             heuristic = get_heuristic(children[i], False)
 
-            # print("printing heuristic", heuristic)
-
-            # this can be optimised // doing rough for now
 
             done = False
+            new_node = [children[i], current_depth + 1, current_key + children[i + 1], heuristic]
 
-            for j in range(3, len(queue), 4):
+            if heuristic == 3:
+                queue.append(new_node)
+                continue
 
+            # loop through the queue to find where the child goes in
+            for j in range(0, len(queue)):
 
-                if queue[j] > heuristic:
+                # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
 
-                    # put the node in
+                if queue[j][3] > heuristic:
 
-                    # print("inserting at:", j)
-
-                    queue.insert(j - 3, heuristic)
-                    queue.insert(j - 3, current_key + children[i + 1])
-                    queue.insert(j - 3, current_depth + 1)
-                    queue.insert(j - 3, children[i])
-                    
-                    # my_print(queue)
-
+                    queue.insert(j, new_node)
                     done = True
-
                     break
 
             if done == False:
-                queue.append(children[i])
-                queue.append(current_depth + 1)
-                queue.append(current_key + children[i + 1])
-                queue.append(heuristic)
-
-
-        if len(queue) / 4 > max_fringe:
-            max_fringe = len(queue) / 4
-
-        # current_message = children[index]
-        # current_depth += 1
-        # current_key += children[i + 1]
-        # expanded += 1
-
+                queue.append(new_node)
 
 
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
@@ -479,7 +443,7 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task6 function
-    print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    # print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
+    # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
     

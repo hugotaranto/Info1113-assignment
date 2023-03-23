@@ -45,14 +45,14 @@ def task5(message_filename, is_goal):
 
     goal_list = ['E', 'T', 'A', 'O', 'N', 'S']
 
-    match_count = 0
-
+    match_count = 6
+    
     for i in range(0, len(goal_list)):
        
         if goal_list[i] == letter_list[i]:
-           match_count += 1
+           match_count -= 1
 
-    return math.ceil((6 - match_count)/2)
+    return math.ceil((match_count)/2)
 
 
 
@@ -63,6 +63,7 @@ def task5(message_filename, is_goal):
 
 if __name__ == '__main__':
   # Example function calls below, you can add your own to test the task5 function
-  print(task5('freq_eg1.txt', False))
-  print(task5('freq_eg1.txt', True))
-  print(task5('freq_eg2.txt', False))
+#   print(task5('freq_eg1.txt', False))
+#   print(task5('freq_eg1.txt', True))
+#   print(task5('freq_eg2.txt', False))
+   print(task5('in.txt', False))

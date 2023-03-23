@@ -47,7 +47,8 @@ def task1(key, filename, indicator):
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task1 function
 
-    print(task1('AE', 'spain.txt', 'd'))
-    print(task1('VFSC', 'ai.txt', 'd'))
-    print(task1('ABBC', 'cabs_plain.txt', 'e'))
+    # print(task1('AE', 'spain.txt', 'd'))
+    # print(task1('VFSC', 'ai.txt', 'd'))
+    # print(task1('ABBC', 'cabs_plain.txt', 'e'))
+    print(task1('AO', '../6/scrambled_quokka.txt', 'e'))
 
