@@ -282,71 +282,140 @@ def ids(message, dictionary, threshold, letters):
                 break
 
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
+    
+
+
+def my_print(queue):
+
+    print("\nPrinting Queue\n")
+
+    for i in range(1, len(queue), 4):
+
+        print(queue[i], queue[i+1], queue[i+2])
+
 
 
 
 def greedy(message, dictionary, threshold, letters):
+
+    queue = [message, 0, "", get_heuristic(message, False)]
+
+    # current_message = message
+    # current_depth = 0
+    # current_key = ""
+
+    expanded = 1
+    max_fringe = 1
+    max_depth = 0
+
+    expanded_states = []
+
+    # start looping taking the first element off of the queue
+
+    while(True):
+
+        
+        # print(get_heuristic(current_message, False))
+        # print(current_key)
+
+        if len(queue) / 4 > max_fringe:
+            max_fringe = len(queue) / 4
+
+
+        # my_print(queue)
+
+
+        try:
+
+            current_message = queue.pop(0)
+            current_depth = queue.pop(0)
+            current_key = queue.pop(0)
+            current_heuristic = queue.pop(0)
+            
+        except:
+            break
+
+        expanded += 1
+
+        if current_depth > max_depth:
+            max_depth = current_depth
+
+
+        if check_threshold(current_message, dictionary, threshold):
+            return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
+        
+
+        # now we search the node
+
+        children = search_node(current_message, letters)
+
+
+        # min = get_heuristic(children[0], False)
+        # index = 0
+
+        # for i in range(2, len(children), 2):
+
+        #     heuristic = get_heuristic(children[i], False)
+
+        #     if min < heuristic:
+        #         min = heuristic
+        #         index = i
+
+        # then order all of the nodes into the queue
+
+        for i in range(0, len(children), 2):
+            heuristic = get_heuristic(children[i], False)
+
+            # print("printing heuristic", heuristic)
+
+            # this can be optimised // doing rough for now
+
+            done = False
+
+            for j in range(3, len(queue), 4):
+
+
+                if queue[j] > heuristic:
+
+                    # put the node in
+
+                    # print("inserting at:", j)
+
+                    queue.insert(j - 3, heuristic)
+                    queue.insert(j - 3, current_key + children[i + 1])
+                    queue.insert(j - 3, current_depth + 1)
+                    queue.insert(j - 3, children[i])
+                    
+                    # my_print(queue)
+
+                    done = True
+
+                    break
+
+            if done == False:
+                queue.append(children[i])
+                queue.append(current_depth + 1)
+                queue.append(current_key + children[i + 1])
+                queue.append(heuristic)
+
+
+        if len(queue) / 4 > max_fringe:
+            max_fringe = len(queue) / 4
+
+        # current_message = children[index]
+        # current_depth += 1
+        # current_key += children[i + 1]
+        # expanded += 1
+
+
+
+    return 0, None, None, expanded, max_fringe, max_depth, expanded_states
+
+
+
+def a_star():
+
     pass
-
-
-# def greedy(message, dictionary, threshold, letters):
-
-#     # queue = [message, 0, "", get_heuristic(message, False)]
-
-#     current_message = message
-#     current_depth = 0
-#     current_key = ""
-
-#     expanded = 1
-#     max_fringe = 1
-#     max_depth = 0
-
-#     expanded_states = []
-
-#     # start looping taking the first element off of the queue
-
-#     while(True):
-
-        
-#         print(get_heuristic(current_message, False))
-#         print(current_key)
-
-#         if check_threshold(current_message, dictionary, threshold):
-#             return 1, current_message, current_key, expanded, max_fringe, current_depth, expanded_states
-        
-
-#         # now we search the node
-
-#         children = search_node(current_message, letters)
-
-#         # and select the best node
-
-#         min = get_heuristic(children[0], False)
-#         index = 0
-
-#         for i in range(2, len(children), 2):
-
-#             heuristic = get_heuristic(children[i], False)
-
-#             if min < heuristic:
-#                 min = heuristic
-#                 index = i
-
-#         if len(children) + 1 > max_fringe:
-#             max_fringe = len(children) + 1
-
-#         # then set the current node to the best child:
-
-#         current_message = children[index]
-#         current_depth += 1
-#         current_key += children[i + 1]
-#         expanded += 1
-
-
-
-#     return 0, None, None, expanded, max_fringe, current_depth, expanded_states
-
-
 
 
 
@@ -380,6 +449,8 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
         status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = ids(message, dictionary, threshold, letters)
     elif algorithm == 'g':
         status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = greedy(message, dictionary, threshold, letters)
+    elif algorithm == 'a':
+        status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = a_star(message, dictionary, threshold, letters)
 
 
 
@@ -408,6 +479,6 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task6 function
     # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-
-    print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
+    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
+    # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
     
