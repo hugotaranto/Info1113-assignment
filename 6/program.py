@@ -322,7 +322,7 @@ def greedy(message, dictionary, threshold, letters):
             max_fringe = len(queue) / 4
 
 
-        # my_print(queue)
+        my_print(queue)
 
 
         try:
@@ -364,6 +364,7 @@ def greedy(message, dictionary, threshold, letters):
         # then order all of the nodes into the queue
 
         for i in range(0, len(children), 2):
+            
             heuristic = get_heuristic(children[i], False)
 
             # print("printing heuristic", heuristic)
@@ -478,7 +479,7 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task6 function
-    # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
+    print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+    # print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
     
