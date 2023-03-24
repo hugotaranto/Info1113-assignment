@@ -321,6 +321,8 @@ def greedy(message, dictionary, threshold, letters):
 
     expanded_states = []
 
+    heuristic_positions = [0, 0, 0]
+
     # start looping taking the first element off of the queue
 
     while(True):
@@ -381,19 +383,24 @@ def greedy(message, dictionary, threshold, letters):
                 queue.append(new_node)
                 continue
 
+            queue.insert(heuristic_positions[heuristic], new_node)
+
+            for j in range(heuristic, 3):
+                heuristic_positions[j] += 1
+
             # loop through the queue to find where the child goes in
-            for j in range(0, len(queue)):
+            # for j in range(0, len(queue)):
 
-                # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
+            #     # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
 
-                if queue[j][3] > heuristic:
+            #     if queue[j][3] > heuristic:
 
-                    queue.insert(j, new_node)
-                    done = True
-                    break
+            #         queue.insert(j, new_node)
+            #         done = True
+            #         break
 
-            if done == False:
-                queue.append(new_node)
+            # if done == False:
+            #     queue.append(new_node)
 
 
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
@@ -476,6 +483,8 @@ if __name__ == '__main__':
     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
 
     end = timer()
+
+    print("\nTask_6 branch\n")
 
     print("\n\nTime elapsed: {}".format(end - start))
     
