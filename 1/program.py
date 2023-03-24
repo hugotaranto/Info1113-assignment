@@ -50,5 +50,5 @@ if __name__ == '__main__':
     # print(task1('AE', 'spain.txt', 'd'))
     # print(task1('VFSC', 'ai.txt', 'd'))
     # print(task1('ABBC', 'cabs_plain.txt', 'e'))
-    print(task1('AO', '../6/scrambled_quokka.txt', 'e'))
+    print(task1('AE', '../6/scrambled_quokka.txt', 'e'))
 

@@ -47,10 +47,19 @@ def task5(message_filename, is_goal):
 
     match_count = 6
     
+    print(letter_list)
+    print(count)
+
+
     for i in range(0, len(goal_list)):
        
         if goal_list[i] == letter_list[i]:
            match_count -= 1
+
+
+    print(letter_list)
+    print(count)
+
 
     return math.ceil((match_count)/2)
 

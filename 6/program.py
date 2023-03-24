@@ -91,50 +91,65 @@ def get_heuristic(message, is_goal):
     if is_goal:
        return 0
 
+    message = message.upper()
+    
+
     letter_list = ['A', 'E', 'N', 'O', 'S', 'T']
     count = [0, 0, 0, 0, 0, 0]
 
-    message = message.upper()
 
-    for i in range(0, len(letter_list)):
-        for j in range(0, len(message)):
-           
-            if letter_list[i] == message[j]:
-               count[i] += 1
+    # count all of the letters
 
-    for i in range(0, len(count)):
-       max = count[i]
-       max_index = i
+    for i in range(0, len(message)):
+        for j in range(0, len(letter_list)):
+           if message[i] == letter_list[j]:
+              count[j] += 1
 
-       for j in range(i, len(count)):
+
+    # now we need to order the letter list given the counts of each
+
+    # sort the count by high to low
+
+    for i in range(0, 6):
+        max = count[i]
+        max_i = i
+
+        for j in range(i + 1, 6):
+
+            # check if this is the new max
+            if max < count[j]:
+               max = count[j]
+               max_i = j
+
+            # if occurence is the same, check alphabetical order
+            if max == count[j]:
+               if ord(letter_list[i]) > ord(letter_list[j]):
+                  max = count[j]
+                  max_i = j
           
-        if count[j] > max:
-            max = count[j]
-            max_index = j
+        # now do the swap
 
-        if count[j] == max:
-           if ord(letter_list[j]) < ord(letter_list[max_index]):
-              max = count[j]
-              max_index = j
-
-        temp = count[i]
-        count[i] = count[max_index]
-        count[max_index] = temp
-
+        # swap the letter
         temp = letter_list[i]
-        letter_list[i] = letter_list[max_index]
-        letter_list[max_index] = temp
+        letter_list[i] = letter_list[max_i]
+        letter_list[max_i] = temp
 
-    goal_list = ['E', 'T', 'A', 'O', 'N', 'S']
+        # swap the count
+        temp = count[i]
+        count[i] = count[max_i]
+        count[max_i] = temp
 
-    match_count = 0
 
-    for i in range(0, len(goal_list)):
-       
-        if goal_list[i] == letter_list[i]:
-           match_count += 1
+    goal_letters = ['E', 'T', 'A', 'O', 'N', 'S']
 
-    return math.ceil((6 - match_count)/2)
+    out_of_place = 0
+
+    for i in range(0, 6):
+       if goal_letters[i] != letter_list[i]:
+          out_of_place += 1
+
+    return math.ceil(out_of_place/2)
+
 
 
 
@@ -206,9 +221,6 @@ def xfs(type, message, dictionary, threshold, letters):
             max_fringe = len(queue)/3
 
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
-
-
-
 
 
 def ids(message, dictionary, threshold, letters):
@@ -284,22 +296,24 @@ def ids(message, dictionary, threshold, letters):
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
     
 
-
 def my_print(queue):
 
-    print("\nPrinting Queue\n")
+    print("\n\n--Printing Queue--\n\nPosition  Depth    Key used    Heuristic")
 
-    for i in range(1, len(queue), 4):
+    for i in range(0, len(queue)):
 
-        print(queue[i], queue[i+1], queue[i+2])
+        print(str(i).ljust(9), str(queue[i][1]).ljust(8), str(queue[i][2]).ljust(11), queue[i][3])
+
+
+
 
 
 
 def greedy(message, dictionary, threshold, letters):
 
-    queue = [[message, 0, "", get_heuristic(message, False)]] # queue contains arrays of form: [message, depth, key, heuristic]
+    queue = [[message, 0, "", get_heuristic(message, check_threshold(message, dictionary, threshold))]] # queue contains arrays of form: [message, depth, key, heuristic]
 
-    expanded = 1
+    expanded = 0
     max_fringe = 1
     max_depth = 0
 
@@ -309,26 +323,32 @@ def greedy(message, dictionary, threshold, letters):
 
     while(True):
 
+        if len(queue) == 0:
+            break
+
         if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
             max_fringe = len(queue)
 
 
         # now we pop off the first node in queue and expand it
 
-        try:
-            node = queue.pop(0)
+        my_print(queue)
 
-            current_message = node[0]
-            current_depth = node[1]
-            current_key = node[2]
-            current_heuristic = node[3]
-            
-        except:
-            break
+        node = queue.pop(0)
+
+        current_message = node[0]
+        current_depth = node[1]
+        current_key = node[2]
+
         
 
         # increment expanded value
         expanded += 1
+
+        # adding the message to the list of expanded states
+
+        if len(expanded_states) != 10:
+            expanded_states.append(current_message)
 
         # updating max_depth value
         if current_depth > max_depth:
@@ -349,7 +369,7 @@ def greedy(message, dictionary, threshold, letters):
 
         for i in range(0, len(children), 2):
             
-            heuristic = get_heuristic(children[i], False)
+            heuristic = get_heuristic(children[i], check_threshold(children[i], dictionary, threshold))
 
 
             done = False
@@ -444,6 +464,6 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
 if __name__ == '__main__':
     # Example function calls below, you can add your own to test the task6 function
     # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'n'))
+    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
     
