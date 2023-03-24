@@ -1,9 +1,6 @@
 import string
 import math
 
-import cProfile
-import pstats
-
 heuristic_cache = dict()
 
 def swap(key, message):
@@ -397,19 +394,6 @@ def greedy(message, dictionary, threshold, letters):
                 heursitic_order[j] += 1
 
 
-            # for j in range(0, len(queue)):
-
-            #     # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
-
-            #     if queue[j][3] > heuristic:
-
-            #         queue.insert(j, new_node)
-            #         done = True
-            #         break
-
-            # if done == False:
-            #     queue.append(new_node)
-
     if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
         max_fringe = len(queue)
 
@@ -491,25 +475,6 @@ def a_star(message, dictionary, threshold, letters):
 
             new_node = [children[i], current_depth + 1, current_key + children[i + 1], score]
 
-            # if len(queue) == 0:
-            #     queue.append(new_node)
-            #     continue
-
-            # if new_node[3] >= queue[-1][3]:
-            #     queue.append(new_node)
-            #     continue
-
-            
-
-            # for j in range(0, len(queue)):
-
-            #     # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
-
-            #     if queue[j][3] > new_node[3]:
-
-            #         queue.insert(j, new_node)
-            #         break
-
 
             # add the node to the queue:
 
@@ -574,11 +539,6 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
         status, solution, key_found, num_expanded, max_fringe, max_depth, expanded_states = a_star(message, dictionary, threshold, letters)
 
 
-
-    # elif algorithm == 'u':
-    #     status = ucs()
-
-
     if status == 0:
         ret = "No solution found.\n\nNum nodes expanded: {}\nMax fringe size: {:.0f}\nMax depth: {}".format(num_expanded, max_fringe, max_depth)
 
@@ -599,20 +559,5 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
 
-    with cProfile.Profile() as pr:
-    #     # Example function calls below, you can add your own to test the task6 function
-        # print(task6('a', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    # print(task6('a', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
-
-
-    # print(task6('g', 'chess.txt', 'common_words.txt', 70, 'AENOST', 'n'))
-        print(task6('a', 'test_4.txt', 'common_words.txt', 70, 'AENOST', 'n'))
-
-    #     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
-
-    stats = pstats.Stats(pr)
-    stats.sort_stats(pstats.SortKey.TIME)
-    # Now you have two options, either print the data or save it as a file
-    stats.print_stats() # Print The Stats
-    stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
+    pass
     
