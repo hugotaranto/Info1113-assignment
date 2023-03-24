@@ -482,5 +482,9 @@ if __name__ == '__main__':
         print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
         # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
 
-   
-    
+    stats = pstats.Stats(pr)
+    stats.sort_stats(pstats.SortKey.TIME)
+    # Now you have two options, either print the data or save it as a file
+    stats.print_stats() # Print The Stats
+    stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
+        
