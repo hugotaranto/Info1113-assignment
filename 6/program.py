@@ -1,6 +1,8 @@
 import string
 import math
 
+from timeit import default_timer as timer
+
 def swap(key, message):
 
     key = list(key)
@@ -332,7 +334,7 @@ def greedy(message, dictionary, threshold, letters):
 
         # now we pop off the first node in queue and expand it
 
-        my_print(queue)
+        # my_print(queue)
 
         node = queue.pop(0)
 
@@ -416,6 +418,9 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     except:
         return "File Error"
 
+    # making the dictionary a set for optimisation
+    dictionary = set(dictionary)
+
     # we have the message as a string
 
 
@@ -462,8 +467,15 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
 
     
 if __name__ == '__main__':
+
+    start = timer()
+
     # Example function calls below, you can add your own to test the task6 function
-    # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+    print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
     print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
+
+    end = timer()
+
+    print("\n\nTime elapsed: {}".format(end - start))
     
