@@ -1,7 +1,8 @@
 import string
 import math
 
-from timeit import default_timer as timer
+import cProfile
+import pstats
 
 def swap(key, message):
 
@@ -475,16 +476,11 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
 
-    start = timer()
+    with cProfile.Profile() as pr:
+        # Example function calls below, you can add your own to test the task6 function
+        print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+        print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
+        # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
 
-    # Example function calls below, you can add your own to test the task6 function
-    print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
-    # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
-
-    end = timer()
-
-    print("\nTask_6 branch\n")
-
-    print("\n\nTime elapsed: {}".format(end - start))
+   
     
