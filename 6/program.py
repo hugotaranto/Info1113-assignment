@@ -4,38 +4,33 @@ import math
 import cProfile
 import pstats
 
+
+
 def swap(key, message):
 
-    key = list(key)
-    message = list(message)
-
-    for i in range(0, len(key)):
-        key.append(key[i].lower())
+    new_message = ""
+    key0_lower = key[0].lower()
+    key1_lower = key[1].lower()
+    # go through the key list and do all the changes at each index of the message
 
     for i in range(0, len(message)):
+        
+        if message[i] == key[0]:
+            new_message += key[1]
+        
+        elif message[i] == key0_lower:
+            new_message += key1_lower
 
-        j = 0
-        for k in range(0, len(key)):
+        elif message[i] == key[1]:
+            new_message += key[0]
 
-            if j >= len(key):
-                break
+        elif message[i] == key1_lower:
+            new_message += key0_lower
 
-            if message[i] == key[j]:
-                if j % 2 == 0:
-                    # go forward one
-                    message[i] = key[j + 1]
-                    j += 1
+        else:
+            new_message += message[i]
 
-
-                else:
-                    # go back one
-                    message[i] = key[j - 1]
-
-            j += 1
-            
-
-
-    return "".join(message)
+    return new_message
 
 
 
@@ -322,9 +317,11 @@ def greedy(message, dictionary, threshold, letters):
 
     expanded_states = []
 
+    heursitic_order = [0, 0, 0]
+
     # start looping taking the first element off of the queue
 
-    while(True):
+    while(expanded < 1000):
 
         if len(queue) == 0:
             break
@@ -335,7 +332,6 @@ def greedy(message, dictionary, threshold, letters):
 
         # now we pop off the first node in queue and expand it
 
-        # my_print(queue)
 
         node = queue.pop(0)
 
@@ -343,10 +339,15 @@ def greedy(message, dictionary, threshold, letters):
         current_depth = node[1]
         current_key = node[2]
 
-        
-
         # increment expanded value
         expanded += 1
+
+        # update the heuristic order:
+
+        for j in range(0, 3):
+            if heursitic_order[j] > 0:
+                heursitic_order[j] -= 1
+
 
         # adding the message to the list of expanded states
 
@@ -374,8 +375,6 @@ def greedy(message, dictionary, threshold, letters):
             
             heuristic = get_heuristic(children[i], check_threshold(children[i], dictionary, threshold))
 
-
-            done = False
             new_node = [children[i], current_depth + 1, current_key + children[i + 1], heuristic]
 
             if heuristic == 3:
@@ -383,18 +382,28 @@ def greedy(message, dictionary, threshold, letters):
                 continue
 
             # loop through the queue to find where the child goes in
-            for j in range(0, len(queue)):
 
-                # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
+            queue.insert(heursitic_order[heuristic], new_node)
 
-                if queue[j][3] > heuristic:
+            for j in range(heuristic, 3):
+                heursitic_order[j] += 1
 
-                    queue.insert(j, new_node)
-                    done = True
-                    break
 
-            if done == False:
-                queue.append(new_node)
+            # for j in range(0, len(queue)):
+
+            #     # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
+
+            #     if queue[j][3] > heuristic:
+
+            #         queue.insert(j, new_node)
+            #         done = True
+            #         break
+
+            # if done == False:
+            #     queue.append(new_node)
+
+    if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
+        max_fringe = len(queue)
 
 
     return 0, None, None, expanded, max_fringe, max_depth, expanded_states
@@ -469,15 +478,20 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
 
-    with cProfile.Profile() as pr:
-        # Example function calls below, you can add your own to test the task6 function
-        print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-        print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
-        # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
+    # with cProfile.Profile() as pr:
+    #     # Example function calls below, you can add your own to test the task6 function
+    #     # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+    #     # print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
 
-    stats = pstats.Stats(pr)
-    stats.sort_stats(pstats.SortKey.TIME)
-    # Now you have two options, either print the data or save it as a file
-    stats.print_stats() # Print The Stats
-    stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
+
+    # print(task6('g', 'chess.txt', 'common_words.txt', 70, 'AENOST', 'n'))
+    print(task6('g', 'test_4.txt', 'common_words.txt', 70, 'AENOST', 'n'))
+
+    #     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
+
+    # stats = pstats.Stats(pr)
+    # stats.sort_stats(pstats.SortKey.TIME)
+    # # Now you have two options, either print the data or save it as a file
+    # stats.print_stats() # Print The Stats
+    # stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
     

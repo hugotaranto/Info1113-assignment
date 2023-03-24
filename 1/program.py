@@ -15,6 +15,8 @@ def task1(key, filename, indicator):
     message = list(f.read())
     key = list(key)
 
+    # print(message)
+
     for i in range(0, len(key)):
         key.append(key[i].lower())
 
@@ -50,5 +52,5 @@ if __name__ == '__main__':
     # print(task1('AE', 'spain.txt', 'd'))
     # print(task1('VFSC', 'ai.txt', 'd'))
     # print(task1('ABBC', 'cabs_plain.txt', 'e'))
-    print(task1('AE', '../6/scrambled_quokka.txt', 'e'))
+    print(task1('AETANOSENTASNEAOTSATSAENTOES', '../1/chess.txt', 'e'))
 

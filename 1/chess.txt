@@ -1,0 +1,15 @@
+The history of chess can be traced back nearly 1500 years to its earliest known predecessor, 
+called chaturanga, in India; its prehistory is the subject of speculation. 
+From India it spread to Persia. Following the Arab invasion and conquest of Persia, 
+chess was taken up by the Muslim world and subsequently spread to Europe via Spain (Al Andalus) and Italy (Emirate of Sicily). The game evolved roughly into its current form by about 1500 CE.
+"Romantic chess" was the predominant playing style from the late 18th century to the 1880s.
+Chess games of this period emphasized quick, tactical maneuvers rather than long-term strategic planning. 
+The Romantic era of play was followed by the Scientific, Hypermodern, and New Dynamism eras. In the second half of the 19th century, 
+modern chess tournament play began, and the first official World Chess Championship was held in 1886. 
+The 20th century saw great leaps forward in chess theory and the establishment of the World Chess Federation. In 1997, 
+an IBM supercomputer beat Garry Kasparov, the then world chess champion, in the famous Deep Blue versus Garry Kasparov match, 
+ushering the game into an era of computer domination. Since then, 
+computer analysis – which originated in the 1970s with the first programmed chess games on the market – 
+has contributed to much of the development in chess theory and has become an important part of preparation in professional human chess. 
+Later developments in the 21st century made the use of computer analysis far surpassing the ability of any human player accessible to the public. 
+Online chess, which first appeared in the mid-1990s, also became popular in the 21st century.
