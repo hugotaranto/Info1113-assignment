@@ -6,36 +6,28 @@ import pstats
 
 def swap(key, message):
 
-    key = list(key)
-    message = list(message)
+    new_message = ""
 
-    for i in range(0, len(key)):
-        key.append(key[i].lower())
+    # go through the key list and do all the changes at each index of the message
 
     for i in range(0, len(message)):
+        
+        if message[i] == key[0]:
+            new_message += key[1]
+        
+        elif message[i] == key[0].lower():
+            new_message += key[1].lower()
 
-        j = 0
-        for k in range(0, len(key)):
+        elif message[i] == key[1]:
+            new_message += key[0]
 
-            if j >= len(key):
-                break
+        elif message[i] == key[1].lower():
+            new_message += key[0].lower()
 
-            if message[i] == key[j]:
-                if j % 2 == 0:
-                    # go forward one
-                    message[i] = key[j + 1]
-                    j += 1
+        else:
+            new_message += message[i]
 
-
-                else:
-                    # go back one
-                    message[i] = key[j - 1]
-
-            j += 1
-            
-
-
-    return "".join(message)
+    return new_message
 
 
 
