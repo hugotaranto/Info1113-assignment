@@ -4,7 +4,7 @@ import math
 import cProfile
 import pstats
 
-
+heuristic_cache = dict()
 
 def swap(key, message):
 
@@ -91,6 +91,10 @@ def get_heuristic(message, is_goal):
 
     message = message.upper()
     
+    result = heuristic_cache.get(message)
+    if result != None:
+        return result
+
 
     letter_list = ['A', 'E', 'N', 'O', 'S', 'T']
     count = [0, 0, 0, 0, 0, 0]
@@ -146,7 +150,11 @@ def get_heuristic(message, is_goal):
        if goal_letters[i] != letter_list[i]:
           out_of_place += 1
 
-    return math.ceil(out_of_place/2)
+    result = math.ceil(out_of_place/2)
+
+    heuristic_cache[message] = result
+
+    return result
 
 
 
@@ -410,9 +418,122 @@ def greedy(message, dictionary, threshold, letters):
 
 
 
-def a_star():
+def a_star(message, dictionary, threshold, letters):
 
-    pass
+    queue = [[message, 0, "", get_heuristic(message, check_threshold(message, dictionary, threshold))]] # queue contains arrays of form: [message, depth, key, heuristic]
+
+    expanded = 0
+    max_fringe = 1
+    max_depth = 0
+
+    expanded_states = []
+
+    queue_order = []
+
+
+
+
+    # start looping taking the first element off of the queue
+
+    while(expanded < 1000):
+
+        if len(queue) == 0:
+            break
+
+        if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
+            max_fringe = len(queue)
+
+
+        # now we pop off the first node in queue and expand it
+
+        node = queue.pop(0)
+
+        current_message = node[0]
+        current_depth = node[1]
+        current_key = node[2]
+
+        # increment expanded value
+        expanded += 1
+
+
+        # update queue_order
+
+        for j in range(0, len(queue_order)):
+            if queue_order[j] > 0:
+                queue_order[j] -= 1
+
+
+        # adding the message to the list of expanded states
+
+        if len(expanded_states) != 10:
+            expanded_states.append(current_message)
+
+        # updating max_depth value
+        if current_depth > max_depth:
+            max_depth = current_depth
+
+        # checking if the expanded node is a solution
+
+        if check_threshold(current_message, dictionary, threshold):
+            return 1, current_message, current_key, expanded, max_fringe, max_depth, expanded_states
+        
+
+        # now we search the node and put children node into a list
+
+        children = search_node(current_message, letters)
+
+
+        # now we loop through children and add them to the queue in order of heuristic value
+
+        for i in range(0, len(children), 2):
+            
+            score = get_heuristic(children[i], check_threshold(children[i], dictionary, threshold)) + current_depth + 1
+
+            new_node = [children[i], current_depth + 1, current_key + children[i + 1], score]
+
+            # if len(queue) == 0:
+            #     queue.append(new_node)
+            #     continue
+
+            # if new_node[3] >= queue[-1][3]:
+            #     queue.append(new_node)
+            #     continue
+
+            
+
+            # for j in range(0, len(queue)):
+
+            #     # if the child heuristic value is less than the queue's heuristic value at index 'j', then we will insert the child at index 'j'
+
+            #     if queue[j][3] > new_node[3]:
+
+            #         queue.insert(j, new_node)
+            #         break
+
+
+            # add the node to the queue:
+
+
+            # we are going to check if the value is bigger than any stored in the queue so far
+
+            while score + 1 > len(queue_order):
+                queue_order.append(len(queue))
+
+            queue.insert(queue_order[score], new_node)
+
+            # then update the queue_order
+
+            for j in range(score, len(queue_order)):
+                queue_order[j] += 1
+
+
+
+
+    if len(queue) > max_fringe: # updating the max_fringe value if the queue is longer than the current max_fringe value
+        max_fringe = len(queue)
+
+
+    return 0, None, None, expanded, max_fringe, max_depth, expanded_states
 
 
 
@@ -478,20 +599,20 @@ def task6(algorithm, message_filename, dictionary_filename, threshold, letters, 
     
 if __name__ == '__main__':
 
-    # with cProfile.Profile() as pr:
+    with cProfile.Profile() as pr:
     #     # Example function calls below, you can add your own to test the task6 function
-    #     # print(task6('g', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
-    #     # print(task6('g', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
+        # print(task6('a', 'secret_msg.txt', 'common_words.txt', 90, 'AENOST', 'n'))
+    # print(task6('a', 'scrambled_quokka.txt', 'common_words.txt', 80, 'AENOST', 'y'))
 
 
     # print(task6('g', 'chess.txt', 'common_words.txt', 70, 'AENOST', 'n'))
-    print(task6('g', 'test_4.txt', 'common_words.txt', 70, 'AENOST', 'n'))
+        print(task6('a', 'test_4.txt', 'common_words.txt', 70, 'AENOST', 'n'))
 
     #     # print(task6('g', 'cabs.txt', 'common_words.txt', 100, 'ABC', 'n'))
 
-    # stats = pstats.Stats(pr)
-    # stats.sort_stats(pstats.SortKey.TIME)
-    # # Now you have two options, either print the data or save it as a file
-    # stats.print_stats() # Print The Stats
-    # stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
+    stats = pstats.Stats(pr)
+    stats.sort_stats(pstats.SortKey.TIME)
+    # Now you have two options, either print the data or save it as a file
+    stats.print_stats() # Print The Stats
+    stats.dump_stats("File/path.prof") # Saves the data in a file, can me used to see the data visually
     
